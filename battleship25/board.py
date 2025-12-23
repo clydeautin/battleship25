@@ -18,14 +18,17 @@ class Board:
     def is_valid_coordinate(self, coord: str) -> bool:
         return coord in self.cells
     
-    def is_valid_placement(self, ship: object, placement: list) -> bool:
+    def is_valid_placement(self, ship: object, placement: list[str]) -> bool:
         ship_n = ship.length
         placement_n = len(placement)
         if ship_n != placement_n:
             return False
         #checks if every coordinate in the placement array is valid on game board
+        #check if a ship currently occupies one of the cells
         for x in placement:
             if self.is_valid_coordinate(x) is False:
+                return False
+            if self.cells[x].ship is not None:
                 return False
         
         # need to determine if ship is place horizontally or vertically
@@ -61,3 +64,10 @@ class Board:
                 return False
         
         return True
+    
+    def place(self, ship: object, placement: list[str]):
+        if self.is_valid_placement(ship, placement)  == False:
+            return False
+        
+        for x in placement:
+            self.cells[x].place_ship(ship)

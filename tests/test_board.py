@@ -33,3 +33,19 @@ def test_valid_placement():
     # If all the previous checks pass then the placement should be valid:
     assert board.is_valid_placement(cruiser, ["A1", "A2", "A3"]) == True
     assert board.is_valid_placement(submarine, ["C3", "D3"]) == True
+
+def test_ship_placement():
+    board = Board()
+    cruiser = Ship("Cruiser", 3)
+    board.place(cruiser, ["A1", "A2", "A3"])
+    cell_1 = board.cells["A1"]
+    assert cell_1.ship == cruiser
+    assert board.cells["A2"].ship == cruiser
+    assert board.cells["A3"].ship == cruiser
+
+def test_ships_dont_overlap():
+    board = Board()
+    cruiser = Ship("Cruiser", 3)
+    board.place(cruiser, ["A1", "A2", "A3"])
+    submarine = Ship("Submarine", 2)
+    assert board.place(submarine, ["A1", "B1"]) == False
