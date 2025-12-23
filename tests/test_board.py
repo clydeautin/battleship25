@@ -49,3 +49,25 @@ def test_ships_dont_overlap():
     board.place(cruiser, ["A1", "A2", "A3"])
     submarine = Ship("Submarine", 2)
     assert board.place(submarine, ["A1", "B1"]) == False
+
+def test_board_render():
+    board = Board()
+    cruiser = Ship("Cruiser", 3)
+    expected = (
+    "  1 2 3 4\n"
+    "A . . . .\n"
+    "B . . . .\n"
+    "C . . . .\n"
+    "D . . . ."
+    )
+    assert board.render() == expected
+    board.place(cruiser, ["A1", "A2", "A3"])
+    expected_2 = (
+    "  1 2 3 4\n"
+    "A S S S .\n"
+    "B . . . .\n"
+    "C . . . .\n"
+    "D . . . ."
+    )
+    assert board.render(True) == expected_2
+

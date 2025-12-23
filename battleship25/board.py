@@ -71,3 +71,19 @@ class Board:
         
         for x in placement:
             self.cells[x].place_ship(ship)
+
+    def render(self, reveal=False) -> str: 
+        rows = ["A", "B", "C", "D"]
+        cols = ["1", "2", "3", "4"]
+
+        lines = []
+        lines.append("  " + " ".join(cols))
+        
+        for row in rows:
+            row_cells = []
+            for col in cols:
+                coord = f"{row}{col}"
+                row_cells.append(self.cells[coord].render(reveal))
+            lines.append(f"{row} " + " ".join(row_cells))
+        
+        return "\n".join(lines)
