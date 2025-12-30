@@ -71,6 +71,8 @@ class Board:
         
         for x in placement:
             self.cells[x].place_ship(ship)
+        
+        return True
 
     def render(self, reveal=False) -> str: 
         rows = ["A", "B", "C", "D"]

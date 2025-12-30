@@ -9,11 +9,26 @@ class Game:
         self.player_cruiser = Ship("Cruiser", 2)
         self.cpu_board = Board()
         self.cpu_submarine = Ship("Submarine", 2)
-        self.cpu_cruiser = Ship("Cruiser", 2)
+        self.cpu_cruiser = Ship("Cruiser", 3)
 
-    def cpu_cruiser_placement(num_of_coords):
-            board_cells = ["A1", "A2", "A3", "A4",
-                            "B1", "B2", "B3", "B4",
-                            "C1", "C2", "C3", "C4",
-                            "D1", "D2", "D3", "D4"]
+    def place_ship(self, board: object, ship: object):
+            coords = list(board.cells.keys())
+            while True:
+                 placement = random.sample(coords, k=ship.length)
+                 if board.place(ship, placement):
+                      return placement
+                 
             
+    def cpu_placement(self):
+        self.place_ship(self.cpu_board, self.cpu_submarine)
+        self.place_ship(self.cpu_board, self.cpu_cruiser)
+
+    def player_cruiser_placement(self):
+        while True:
+            raw = input("Enter the squares for the Cruiser (3 spaces) (ie: A1 A2 A3): ").strip()
+            coords = raw.upper().split()
+
+            if self.player_board.place(self.player_cruiser,coords):
+                return coords
+                
+            print("Invalid placement! Please try again")
