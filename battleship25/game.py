@@ -32,3 +32,31 @@ class Game:
                 return coords
                 
             print("Invalid placement! Please try again")
+
+    def player_submarine_placement(self):
+        while True:
+            raw = input("Enter the squares for the Submarine (2 spaces) (ie: B1 B2): ").strip()
+            coords = raw.upper().split()
+
+            if self.player_board.place(self.player_submarine,coords):
+                return coords
+                
+            print("Invalid placement! Please try again")
+
+    def _valid_player_shot(self, coord):
+        if not self.cpu_board.is_valid_coordinate(coord):
+            print("Invalid target coordinate")
+            return False
+        
+        if self.cpu_board.cells[coord].is_fired_upon:
+            print("You have already fired on this coordinate!")
+            return False
+    
+    
+    def player_shot(self):
+        while True:
+            coord = input("Enter the coordinates of the shot (ie: A1): ").strip().upper()
+
+            if self._valid_player_shot(coord):
+                self.cpu_board.cells[coord].fire_upon()
+                return coord
