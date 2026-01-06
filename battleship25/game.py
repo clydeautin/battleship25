@@ -51,6 +51,7 @@ class Game:
         if self.cpu_board.cells[coord].is_fired_upon:
             print("You have already fired on this coordinate!")
             return False
+        return True
     
     
     def player_shot(self):
@@ -60,3 +61,86 @@ class Game:
             if self._valid_player_shot(coord):
                 self.cpu_board.cells[coord].fire_upon()
                 return coord
+ 
+            
+    def cpu_shot(self):
+        all_coordinates = self.player_board.cells.keys()
+
+        unhit_coords = [
+            coord
+            for coord in all_coordinates
+            if not self.player_board.cells[coord].is_fired_upon
+        ]
+
+        target = random.choice(unhit_coords)
+        self.player_board.cells[target].fire_upon()
+
+    def player_turn_result(self, coord: str) -> str:
+        cell = self.cpu_board.cells[coord]
+
+        if cell.ship is None:
+            return f"Your shot on {coord} was a miss"
+        
+        if cell.ship.sunk():
+            return f"Your hit on {coord} sunk the enemy {cell.ship.name}.!"
+        
+        return f"Your shot on {coord} was a hit!"
+    
+    def cpu_turn_result(self, coord: str) -> str:
+        cell = self.player_board.cells[coord]
+
+        if cell.ship is None:
+            return f"CPU fired on {coord} and missed"
+        
+        if cell.ship.sunk():
+            return f"CPU hit {coord} and sunk your {cell.ship.name}!"
+        
+        return f"CPU fired on {coord} and hit your {cell.ship.name}"
+    
+    def full_turn(self):
+        while self.player_cruiser.health > 0 and self.player_submarine.health > 0 or self.cpu_cruiser.health > 0 and self.cpu_submarine.health > 0:
+            print("=============COMPUTER BOARD============= \n")
+            print(self.cpu_board.render)
+            
+            print("=============PLAYER BOARD============= \n")
+            print(self.player_board.render(True))
+
+            player_shot_coords = self.player_shot()
+            cpu_shot_coords = self.cpu_shot()
+
+            self.player_turn_result(player_shot_coords)
+            self.cpu_turn_result(cpu_shot_coords)
+
+        if self.player_cruiser.health == 0 and self.player_submarine.health == 0:
+            print("computer win!")
+        elif self.cpu_cruiser.health == 0 and self.cpu_submarine.health == 0:
+            print("player win!")
+
+    def start(self):
+        print("Welcome to the Battleship Game!")
+
+        start_answer = input('Enter p to play. Enter q to quit.').strip().upper()
+
+        if start_answer == 'P':
+            self.play()
+        else:
+            print('Thanks for playing!')
+
+    def play(self):
+        
+        self.cpu_placement()
+
+        print(
+            "I have laid out my ships on the grid .\n"
+            "You now need ot lay out your two ships on the grid.\n"
+            "The Cruiser is three units long and the Submarine is two units long.\n"
+        )
+        print(self.player_board.render(reveal=True))
+
+        self.player_cruiser_placement()
+
+        self.player_submarine_placement()
+
+        self.full_turn()
+
+        return
