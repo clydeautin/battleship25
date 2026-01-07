@@ -6,7 +6,7 @@ class Game:
     def __init__(self):
         self.player_board = Board()
         self.player_submarine = Ship("Submarine", 2)
-        self.player_cruiser = Ship("Cruiser", 2)
+        self.player_cruiser = Ship("Cruiser", 3)
         self.cpu_board = Board()
         self.cpu_submarine = Ship("Submarine", 2)
         self.cpu_cruiser = Ship("Cruiser", 3)
@@ -74,6 +74,7 @@ class Game:
 
         target = random.choice(unhit_coords)
         self.player_board.cells[target].fire_upon()
+        return target
 
     def player_turn_result(self, coord: str) -> str:
         cell = self.cpu_board.cells[coord]
@@ -100,7 +101,7 @@ class Game:
     def full_turn(self):
         while self.player_cruiser.health > 0 and self.player_submarine.health > 0 or self.cpu_cruiser.health > 0 and self.cpu_submarine.health > 0:
             print("=============COMPUTER BOARD============= \n")
-            print(self.cpu_board.render)
+            print(self.cpu_board.render())
             
             print("=============PLAYER BOARD============= \n")
             print(self.player_board.render(True))
