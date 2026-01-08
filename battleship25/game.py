@@ -80,26 +80,33 @@ class Game:
         cell = self.cpu_board.cells[coord]
 
         if cell.ship is None:
-            return f"Your shot on {coord} was a miss"
+            return f">>Your shot on {coord} was a miss<<"
         
         if cell.ship.sunk():
-            return f"Your hit on {coord} sunk the enemy {cell.ship.name}.!"
+            return f">>Your hit on {coord} sunk the enemy {cell.ship.name}!<<"
         
-        return f"Your shot on {coord} was a hit!"
+        return f">>Your shot on {coord} was a hit!<<"
     
     def cpu_turn_result(self, coord: str) -> str:
         cell = self.player_board.cells[coord]
 
         if cell.ship is None:
-            return f"CPU fired on {coord} and missed"
+            return f">>CPU fired on {coord} and missed<<"
         
         if cell.ship.sunk():
-            return f"CPU hit {coord} and sunk your {cell.ship.name}!"
+            return f">>CPU hit {coord} and sunk your {cell.ship.name}!<<"
         
-        return f"CPU fired on {coord} and hit your {cell.ship.name}"
+        return f">>CPU fired on {coord} and hit your {cell.ship.name}<<"
+    
+    def fleet_sunk(self, cruiser, submarine):
+        return cruiser.sunk() and submarine.sunk()
     
     def full_turn(self):
-        while self.player_cruiser.health > 0 and self.player_submarine.health > 0 or self.cpu_cruiser.health > 0 and self.cpu_submarine.health > 0:
+
+        # player_sunk = self.player_cruiser.sunk() and self.player_submarine.sunk() 
+        # cpu_sunk = self.cpu_cruiser.sunk() and self.cpu_submarine.sunk() 
+
+        while not self.fleet_sunk(self.player_cruiser, self.player_submarine) and not self.fleet_sunk(self.cpu_cruiser, self.cpu_submarine):
             print("=============COMPUTER BOARD============= \n")
             print(self.cpu_board.render())
             
@@ -109,8 +116,8 @@ class Game:
             player_shot_coords = self.player_shot()
             cpu_shot_coords = self.cpu_shot()
 
-            self.player_turn_result(player_shot_coords)
-            self.cpu_turn_result(cpu_shot_coords)
+            print(self.player_turn_result(player_shot_coords))
+            print(self.cpu_turn_result(cpu_shot_coords))
 
         if self.player_cruiser.health == 0 and self.player_submarine.health == 0:
             print("computer win!")
@@ -133,7 +140,7 @@ class Game:
 
         print(
             "I have laid out my ships on the grid .\n"
-            "You now need ot lay out your two ships on the grid.\n"
+            "You now need to lay out your two ships on the grid.\n"
             "The Cruiser is three units long and the Submarine is two units long.\n"
         )
         print(self.player_board.render(reveal=True))
